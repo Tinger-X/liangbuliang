@@ -1,0 +1,16 @@
+.idea/
+.claude/
+.gradle/
+.kotlin/
+/local.properties
+/build
+local.properties
+
+# Test screenshot outputs
+app/src/test/screenshots/
+
+# liangbuliang123
+debug.keystore
+my-upload-key.jks
+build.bat
+deploy.bat

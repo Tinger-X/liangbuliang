@@ -1,0 +1,6 @@
+{
+  "name": "亮不亮",
+  "description": "极致简洁的屏幕亮度与熄屏时长调节工具，支持后台持续生效。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
