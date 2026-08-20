@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" alt="亮不亮" width="200" />
+  <img src="app/src/main/res/drawable/ic_launcher_icon_light.png" alt="亮不亮" width="200" />
 </p>
 
 <h1 align="center">亮不亮</h1>

@@ -5,6 +5,7 @@
 /build
 /local
 local.properties
+version.properties
 
 # Test screenshot outputs
 app/src/test/screenshots/

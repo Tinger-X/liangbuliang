@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" alt="LiangBuLiang" width="200" />
+  <img src="app/src/main/res/drawable/ic_launcher_icon_light.png" alt="LiangBuLiang" width="200" />
 </p>
 
 <h1 align="center">LiangBuLiang</h1>
