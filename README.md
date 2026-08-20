@@ -29,7 +29,7 @@
 
 ## 下载
 
-- [GitHub Releases](https://github.com/tinger/liangbuliang/releases) — 下载最新版 APK
+- [GitHub Releases](https://github.com/Tinger-X/liangbuliang/releases) — 下载最新版 APK
 - 访问官方网站：[https://liangbuliang.tin.edu.kg](https://liangbuliang.tin.edu.kg)
 
 ## 授予 WRITE_SECURE_SETTINGS 权限（推荐）

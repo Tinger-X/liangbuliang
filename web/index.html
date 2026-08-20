@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>亮不亮 · LiangBuLiang — 极致简洁的屏幕亮度与熄屏时长调节工具</title>
+  <meta name="description" content="亮不亮（LiangBuLiang）是一款极致简洁的 Android 屏幕亮度与熄屏时长调节工具，支持 0.1%~10% 精细亮度调节、5 秒到常亮的 25 档熄屏时长，以及后台持续守护，一键锁定你的屏幕设置。" />
+  <meta name="keywords" content="亮不亮, LiangBuLiang, 屏幕亮度, 熄屏时长, 常亮, Android, Extra Dim, 亮度调节" />
+  <meta name="author" content="Tinger" />
+  <link rel="canonical" href="https://liangbuliang.tin.edu.kg/" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="亮不亮 · LiangBuLiang" />
+  <meta property="og:title" content="亮不亮 · LiangBuLiang — 极致简洁的屏幕亮度与熄屏时长调节工具" />
+  <meta property="og:description" content="支持 0.1%~10% 精细亮度调节、5 秒到常亮的 25 档熄屏时长，后台持续守护，一键锁定你的屏幕设置。" />
+  <meta property="og:url" content="https://liangbuliang.tin.edu.kg/" />
+  <meta property="og:image" content="https://liangbuliang.tin.edu.kg/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="亮不亮 · LiangBuLiang" />
+  <meta name="twitter:description" content="极致简洁的屏幕亮度与熄屏时长调节工具，后台持续生效。" />
+  <meta name="twitter:image" content="https://liangbuliang.tin.edu.kg/logo.png" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <meta name="theme-color" content="#F59E0B" />
+  <meta name="color-scheme" content="light dark" />
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">跳到主要内容</a>
+
+  <!-- ======================= Header ======================= -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="亮不亮 LiangBuLiang">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+            <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <line x1="12" y1="1.5" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="22.5"/>
+              <line x1="1.5" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="22.5" y2="12"/>
+              <line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/>
+              <line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/>
+              <line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/>
+              <line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/>
+            </g>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">亮不亮</span>
+          <span class="brand-sub">LiangBuLiang</span>
+        </span>
+      </a>
+
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#features" data-i18n="nav.features">功能</a>
+        <a href="#demo" data-i18n="nav.demo">演示</a>
+        <a href="#download" data-i18n="nav.download">下载</a>
+        <a href="#guide" data-i18n="nav.guide">使用指南</a>
+        <a href="#privacy" data-i18n="nav.privacy">隐私</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="lang-toggle" role="group" aria-label="Language / 语言">
+          <button type="button" class="lang-btn is-active" data-lang="zh" aria-pressed="true">中</button>
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button type="button" class="icon-btn theme-toggle" id="theme-toggle" aria-label="切换深浅色模式" title="切换深浅色模式">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+            <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/>
+              <line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/>
+              <line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/><line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/>
+              <line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/><line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/>
+            </g>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+          </svg>
+        </button>
+        <a class="btn btn-primary btn-sm header-cta" href="#download" data-i18n="nav.cta">下载</a>
+        <button type="button" class="icon-btn nav-toggle" id="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ======================= Hero ======================= -->
+    <section class="hero" id="top">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <span class="badge">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span data-i18n="hero.badge">v26.08.145 · 免费 · 开源</span>
+          </span>
+          <h1 class="hero-title">
+            <span data-i18n="hero.title">亮不亮</span>
+          </h1>
+          <p class="hero-tagline" data-i18n="hero.tagline">极致简洁的屏幕亮度与熄屏时长调节工具，支持后台持续生效。</p>
+          <p class="hero-desc" data-i18n="hero.desc">在阅读、观影或任何需要固定屏幕亮度与熄屏时长的场景下，一键锁定你的屏幕设置。</p>
+
+          <div class="hero-ctas">
+            <a class="btn btn-primary btn-lg" href="#download">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span data-i18n="hero.cta_download">下载 Android 版</span>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="#guide" data-i18n="hero.cta_guide">查看使用指南</a>
+          </div>
+
+          <ul class="hero-stats">
+            <li>
+              <span class="stat-value">0.1%–10%</span>
+              <span class="stat-label" data-i18n="hero.stat_brightness">精细亮度调节</span>
+            </li>
+            <li>
+              <span class="stat-value">5s–∞</span>
+              <span class="stat-label" data-i18n="hero.stat_timeout">25 档熄屏时长</span>
+            </li>
+            <li>
+              <span class="stat-value">Android 7.0+</span>
+              <span class="stat-label" data-i18n="hero.stat_android">广泛兼容</span>
+            </li>
+            <li>
+              <span class="stat-value" data-i18n="hero.stat_privacy_val">本地存储</span>
+              <span class="stat-label" data-i18n="hero.stat_privacy">隐私优先</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hero-visual">
+          <div class="app-card" aria-hidden="true">
+            <img class="app-icon" src="/logo.png" alt="" width="176" height="176" />
+            <span class="float-chip float-chip--tl">0.1%–10%</span>
+            <span class="float-chip float-chip--br">5s → ∞</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= Features ======================= -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="features.eyebrow">核心功能</span>
+          <h2 class="section-title" data-i18n="features.title">把屏幕的控制权还给你</h2>
+          <p class="section-sub" data-i18n="features.sub">少即是多。亮不亮只做两件事，并把它做到极致。</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card reveal">
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4M12 8a4 4 0 0 1 0 8 4 4 0 0 1 0-8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            <h3 data-i18n="features.f1_title">屏幕亮度调节</h3>
+            <p data-i18n="features.f1_desc">0.1%~10% 精细调节，启用后覆盖系统亮度，读屏、观影不再刺眼。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3 data-i18n="features.f2_title">熄屏时长控制</h3>
+            <p data-i18n="features.f2_desc">从 5 秒到常亮共 25 个档位，灵活应对阅读、导航、演示等场景。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3a6 6 0 0 0-6 6v3a6 6 0 0 0 12 0V9a6 6 0 0 0-6-6Z" stroke="currentColor" stroke-width="1.8"/><path d="M5 12H3M21 12h-2M12 21a3 3 0 0 0 3-3H9a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            <h3 data-i18n="features.f3_title">后台守护</h3>
+            <p data-i18n="features.f3_desc">通过前台服务在后台持续维持设置，切换应用也不会丢失。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="m4 12 3-3m-3 3 3 3m13-3a8 8 0 0 0-2.3-5.7M20 12l-3 3m3-3-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3 data-i18n="features.f4_title">一键恢复</h3>
+            <p data-i18n="features.f4_desc">关闭功能后自动还原你的原始系统亮度与熄屏时长，不留痕迹。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M12 3l-4 4M12 3l4 4M12 21l-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <h3 data-i18n="features.f5_title">Extra Dim 超低亮度</h3>
+            <p data-i18n="features.f5_desc">借助系统原生「Extra Dim」实现 0.1%~1% 的平滑超低亮度，深夜无打扰。</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            <h3 data-i18n="features.f6_title">隐私优先</h3>
+            <p data-i18n="features.f6_desc">所有设置仅存储在设备本地，不上传任何服务器，无需联网即可使用。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= Demo ======================= -->
+    <section class="section section-alt" id="demo">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="demo.eyebrow">上手即用</span>
+          <h2 class="section-title" data-i18n="demo.title">拖动滑块，感受一下</h2>
+          <p class="section-sub" data-i18n="demo.sub">这是亮不亮的真实界面，1:1 还原。开启开关、拖动滑块，直观感受它的实际效果。</p>
+        </div>
+
+        <div class="phone-wrap reveal">
+          <div class="phone">
+            <div class="phone-screen" id="phone-screen">
+              <div class="app" id="phone-app">
+                <div class="app-body">
+                  <h3 class="app-title">亮不亮</h3>
+
+                  <div class="app-card">
+                    <div class="app-card-head">
+                      <svg class="app-head-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4M12 8a4 4 0 0 1 0 8 4 4 0 0 1 0-8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                      <span class="app-card-label" data-i18n="demo.brightness">屏幕亮度</span>
+                      <span class="app-value is-off" id="brightness-value">关闭</span>
+                      <button type="button" class="switch" id="brightness-switch" role="switch" aria-checked="false" data-i18n-label="demo.brightness_switch"></button>
+                    </div>
+                    <div class="app-slider" id="brightness-slider-wrap">
+                      <input type="range" id="brightness-range" min="0.1" max="10" step="0.1" value="10" aria-label="亮度" />
+                      <div class="app-slider-labels" aria-hidden="true"><span>0.1%</span><span>10%</span></div>
+                    </div>
+                  </div>
+
+                  <div class="app-card">
+                    <div class="app-card-head">
+                      <svg class="app-head-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <span class="app-card-label" data-i18n="demo.timeout">熄屏时长</span>
+                      <span class="app-value is-off" id="timeout-value">关闭</span>
+                      <button type="button" class="switch" id="timeout-switch" role="switch" aria-checked="false" data-i18n-label="demo.timeout_switch"></button>
+                    </div>
+                    <div class="app-slider" id="timeout-slider-wrap">
+                      <input type="range" id="timeout-range" min="0" max="24" step="1" value="3" aria-label="熄屏时长" />
+                      <div class="app-slider-labels" aria-hidden="true"><span>5s</span><span data-i18n="demo.always">常亮</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="app-footer">Copyright © 26-26 Tinger, v26.08.145</p>
+              </div>
+
+              <div class="screensaver" id="screensaver" aria-hidden="true">
+                <div class="screensaver-clock" id="screensaver-clock">09:41</div>
+                <div class="screensaver-hint" data-i18n="demo.wake">轻触唤醒</div>
+              </div>
+            </div>
+          </div>
+          <p class="demo-caption" data-i18n="demo.caption">小提示：把熄屏时长设为 5s，等待几秒屏幕就会熄灭，轻触手机屏幕即可唤醒。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= Download ======================= -->
+    <section class="section" id="download">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="download.eyebrow">获取应用</span>
+          <h2 class="section-title" data-i18n="download.title">下载亮不亮</h2>
+          <p class="section-sub" data-i18n="download.sub">当前最新版本 v26.08.145，支持 Android 7.0 及以上。</p>
+        </div>
+
+        <div class="download-card reveal">
+          <img class="download-icon" src="/logo.png" alt="亮不亮应用图标" width="96" height="96" loading="lazy" />
+          <div class="download-info">
+            <h3>亮不亮 <span class="version-tag">v26.08.145</span></h3>
+            <p data-i18n="download.meta">Android 7.0+ · arm64-v8a · 免费 · 无广告</p>
+          </div>
+          <div class="download-actions">
+            <a class="btn btn-primary btn-lg" href="https://github.com/Tinger-X/liangbuliang/releases/latest" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-i18n="download.cta_github">从 GitHub Releases 下载</span>
+            </a>
+            <a class="btn btn-ghost btn-lg" href="https://github.com/Tinger-X/liangbuliang" target="_blank" rel="noopener noreferrer" data-i18n="download.cta_source">查看源码</a>
+          </div>
+        </div>
+
+        <p class="download-note" data-i18n="download.note">APK 由 Tinger 构建并签名，构建过程与源码完全公开，可在 GitHub 仓库中审计。</p>
+      </div>
+    </section>
+
+    <!-- ======================= Guide ======================= -->
+    <section class="section section-alt" id="guide">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="guide.eyebrow">进阶使用</span>
+          <h2 class="section-title" data-i18n="guide.title">授予 WRITE_SECURE_SETTINGS 权限（推荐）</h2>
+          <p class="section-sub" data-i18n="guide.sub">在 Android 12 及以上，0.1%~1% 的超低亮度借助系统原生「Extra Dim」实现，需要手动授予一项系统保护权限。</p>
+        </div>
+
+        <div class="guide-layout">
+          <div class="guide-steps">
+            <ol class="step-list">
+              <li>
+                <span class="step-num">1</span>
+                <div>
+                  <h3 data-i18n="guide.s1_title">开启 USB 调试</h3>
+                  <p data-i18n="guide.s1_desc">在设备的「开发者选项」中开启 USB 调试，并用数据线连接电脑。</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">2</span>
+                <div>
+                  <h3 data-i18n="guide.s2_title">执行授权命令</h3>
+                  <p data-i18n="guide.s2_desc">在电脑终端执行下方命令，即可授予权限。</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">3</span>
+                <div>
+                  <h3 data-i18n="guide.s3_title">重启应用</h3>
+                  <p data-i18n="guide.s3_desc">回到亮不亮，将亮度调至 1% 以下，即可体验平滑无跳变的超低亮度。</p>
+                </div>
+              </li>
+            </ol>
+
+            <div class="code-block">
+              <div class="code-block-head">
+                <span class="code-block-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span data-i18n="guide.code_label">授权命令</span>
+                <button type="button" class="copy-btn" data-copy="adb shell pm grant kg.edu.tin.liangbuliang android.permission.WRITE_SECURE_SETTINGS" data-i18n="guide.copy">复制</button>
+              </div>
+              <pre><code>adb shell pm grant kg.edu.tin.liangbuliang android.permission.WRITE_SECURE_SETTINGS</code></pre>
+            </div>
+
+            <p class="guide-tip" data-i18n="guide.shizuku">也可通过 Shizuku 等工具在设备上直接授予该权限，无需电脑。</p>
+          </div>
+
+          <aside class="guide-aside">
+            <div class="aside-block">
+              <h3 data-i18n="guide.granted_title">✅ 已授予权限</h3>
+              <p data-i18n="guide.granted_desc">应用使用系统原生「Extra Dim」平滑调节 0.1%~1% 超低亮度，变化连续无跳变；即使后台进程被清理，1% 以下的亮度仍会保留。</p>
+            </div>
+            <div class="aside-block">
+              <h3 data-i18n="guide.nogrant_title">⚠️ 未授予权限</h3>
+              <p data-i18n="guide.nogrant_desc">应用退化为「屏幕遮罩」方案实现超低亮度；后台被清理时遮罩失效，1% 以下的亮度会回弹到 1%。</p>
+            </div>
+            <div class="aside-block">
+              <h3 data-i18n="guide.revoke_title">撤销权限</h3>
+              <div class="code-block code-block--mini">
+                <div class="code-block-head">
+                  <span class="code-block-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                  <button type="button" class="copy-btn" data-copy="adb shell pm revoke kg.edu.tin.liangbuliang android.permission.WRITE_SECURE_SETTINGS" data-i18n="guide.copy">复制</button>
+                </div>
+                <pre><code>adb shell pm revoke kg.edu.tin.liangbuliang android.permission.WRITE_SECURE_SETTINGS</code></pre>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= Privacy ======================= -->
+    <section class="section" id="privacy">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="privacy.eyebrow">隐私说明</span>
+          <h2 class="section-title" data-i18n="privacy.title">你的数据，只属于你</h2>
+          <p class="section-sub" data-i18n="privacy.sub">亮不亮申请的所有权限均服务于「调节屏幕」这一单一目的，且数据只在本地。</p>
+        </div>
+
+        <div class="privacy-table-wrap reveal">
+          <table class="privacy-table">
+            <thead>
+              <tr>
+                <th data-i18n="privacy.col_perm">权限 / 数据</th>
+                <th data-i18n="privacy.col_purpose">用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>WRITE_SETTINGS</code></td><td data-i18n="privacy.r1">调节系统屏幕亮度与熄屏时长</td></tr>
+              <tr><td><code>WRITE_SECURE_SETTINGS</code></td><td data-i18n="privacy.r2">在 Android 12+ 通过「Extra Dim」实现 0.1%~1% 超低亮度平滑调节</td></tr>
+              <tr><td><code>FOREGROUND_SERVICE</code></td><td data-i18n="privacy.r3">后台持续维护用户设置</td></tr>
+              <tr><td><code>POST_NOTIFICATIONS</code></td><td data-i18n="privacy.r4">前台服务通知</td></tr>
+              <tr><td><code>WAKE_LOCK</code></td><td data-i18n="privacy.r5">保持屏幕常亮（仅当用户主动选择时）</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="privacy-note">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 7.7 7 9 4-1.3 7-4.5 7-9V6l-7-3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <p data-i18n="privacy.note">所有设置数据仅存储在设备本地，不上传至任何服务器，无需注册、无需联网、无任何分析或广告追踪。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FAQ ======================= -->
+    <section class="section section-alt" id="faq">
+      <div class="container container-narrow">
+        <div class="section-head">
+          <span class="eyebrow" data-i18n="faq.eyebrow">常见问题</span>
+          <h2 class="section-title" data-i18n="faq.title">你可能想知道</h2>
+        </div>
+
+        <div class="faq-list reveal">
+          <details class="faq-item">
+            <summary><span data-i18n="faq.q1">亮不亮收费吗？</span><span class="faq-chevron" aria-hidden="true"></span></summary>
+            <p data-i18n="faq.a1">完全免费、开源、无广告。你可以自由下载使用，也可以前往 GitHub 查看源码。</p>
+          </details>
+          <details class="faq-item">
+            <summary><span data-i18n="faq.q2">为什么低于 1% 需要额外授权？</span><span class="faq-chevron" aria-hidden="true"></span></summary>
+            <p data-i18n="faq.a2">Android 12+ 的 0.1%~1% 亮度依赖系统原生「Extra Dim」功能，该功能受系统保护，需通过 ADB 或 Shizuku 授予 WRITE_SECURE_SETTINGS 权限。</p>
+          </details>
+          <details class="faq-item">
+            <summary><span data-i18n="faq.q3">退出应用后设置会失效吗？</span><span class="faq-chevron" aria-hidden="true"></span></summary>
+            <p data-i18n="faq.a3">不会。启用后应用通过前台服务在后台持续维持设置，切换或退出应用都不会丢失；主动关闭功能时会自动还原原始设置。</p>
+          </details>
+          <details class="faq-item">
+            <summary><span data-i18n="faq.q4">数据会被上传吗？</span><span class="faq-chevron" aria-hidden="true"></span></summary>
+            <p data-i18n="faq.a4">不会。所有设置仅保存在设备本地，应用无需任何网络权限即可正常使用。</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================= Footer ======================= -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.6" y1="4.6" x2="6.4" y2="6.4"/><line x1="17.6" y1="17.6" x2="19.4" y2="19.4"/><line x1="4.6" y1="19.4" x2="6.4" y2="17.6"/><line x1="17.6" y1="6.4" x2="19.4" y2="4.6"/></g></svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">亮不亮</span>
+            <span class="brand-sub">LiangBuLiang</span>
+          </span>
+        </a>
+        <p class="footer-tagline" data-i18n="footer.tagline">极致简洁的屏幕亮度与熄屏时长调节工具。</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4 data-i18n="footer.product">产品</h4>
+          <a href="#features" data-i18n="nav.features">功能</a>
+          <a href="#download" data-i18n="nav.download">下载</a>
+          <a href="#privacy" data-i18n="nav.privacy">隐私</a>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer.resources">资源</h4>
+          <a href="#guide" data-i18n="nav.guide">使用指南</a>
+          <a href="#faq" data-i18n="footer.faq">常见问题</a>
+          <a href="https://github.com/Tinger-X/liangbuliang" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+        <div class="footer-col">
+          <h4 data-i18n="footer.contact">联系</h4>
+          <a href="mailto:liangbuliang@tin.edu.kg">liangbuliang@tin.edu.kg</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© <span id="year">2026</span> LiangBuLiang · <span data-i18n="footer.rights">保留所有权利</span></p>
+      <p class="footer-made">Made with <span class="heart">♥</span> by Tinger</p>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
