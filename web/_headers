@@ -5,8 +5,5 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), interest-cohort=()
   Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'
 
-/logo.png
-  Cache-Control: public, max-age=31536000, immutable
-
-/favicon.svg
+/assets/*
   Cache-Control: public, max-age=31536000, immutable

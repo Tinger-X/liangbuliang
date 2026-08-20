@@ -208,7 +208,15 @@ code, pre { font-family: var(--font-mono); }
   color: var(--text);
   border-color: var(--border-strong);
 }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent-strong); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent-strong); transform: translateY(-1px); }
+
+.btn-github {
+  background: #24292F;
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 12px 32px -8px rgba(36, 41, 47, 0.45);
+}
+.btn-github:hover { background: #161B22; border-color: rgba(255, 255, 255, 0.42); transform: translateY(-1px); }
 
 .icon-btn {
   display: inline-flex;
@@ -672,7 +680,7 @@ code, pre { font-family: var(--font-mono); }
   border-radius: var(--radius-lg);
   padding: 32px;
   box-shadow: var(--shadow-md);
-  max-width: 720px;
+  width: 500px;
   margin: 0 auto;
 }
 .download-icon {
@@ -693,7 +701,24 @@ code, pre { font-family: var(--font-mono); }
   font-variant-numeric: tabular-nums;
 }
 .download-info p { margin-top: 8px; color: var(--text-muted); font-size: 0.95rem; }
-.download-actions { display: flex; flex-direction: column; gap: 10px; }
+.download-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 320px;
+  min-width: 260px;
+}
+.download-actions .btn {
+  justify-content: center;
+}
+.download-actions-row {
+  display: flex;
+  gap: 12px;
+}
+.download-actions-row .btn {
+  flex: 1;
+  min-width: 0;
+}
 .download-note {
   margin: 28px auto 0;
   max-width: 640px;
@@ -963,6 +988,7 @@ code, pre { font-family: var(--font-mono); }
   .feature-grid { grid-template-columns: 1fr; }
   .hero-stats { gap: 24px; }
   .download-card { justify-content: center; text-align: center; }
+  .download-actions-row { flex-direction: column; }
   .download-info h3 { justify-content: center; }
   .footer-inner { flex-direction: column; }
 }

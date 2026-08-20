@@ -17,7 +17,7 @@
       'nav.privacy': '隐私',
       'nav.cta': '下载',
 
-      'hero.badge': 'v26.08.145 · 免费 · 开源',
+      'hero.badge': 'v26.08.r145 · 免费 · 开源',
       'hero.title': '亮不亮',
       'hero.tagline': '极致简洁的屏幕亮度与熄屏时长调节工具，支持后台持续生效。',
       'hero.desc': '在阅读、观影或任何需要固定屏幕亮度与熄屏时长的场景下，一键锁定你的屏幕设置。',
@@ -59,10 +59,11 @@
 
       'download.eyebrow': '获取应用',
       'download.title': '下载亮不亮',
-      'download.sub': '当前最新版本 v26.08.145，支持 Android 7.0 及以上。',
+      'download.sub': '当前最新版本 v26.08.r145，支持 Android 7.0 及以上。',
       'download.meta': 'Android 7.0+ · arm64-v8a · 免费 · 无广告',
-      'download.cta_github': '从 GitHub Releases 下载',
-      'download.cta_source': '查看源码',
+      'download.cta_direct': '官网下载安装包',
+      'download.cta_github': 'Github 下载',
+      'download.cta_star': 'Github 标星',
       'download.note': 'APK 由 Tinger 构建并签名，构建过程与源码完全公开，可在 GitHub 仓库中审计。',
 
       'guide.eyebrow': '进阶使用',
@@ -123,7 +124,7 @@
       'nav.privacy': 'Privacy',
       'nav.cta': 'Download',
 
-      'hero.badge': 'v26.08.145 · Free · Open source',
+      'hero.badge': 'v26.08.r145 · Free · Open source',
       'hero.title': 'LiangBuLiang',
       'hero.tagline': 'An ultra-simple screen brightness and screen-off timeout tool that keeps working in the background.',
       'hero.desc': 'Lock your screen settings with one tap for reading, watching videos, or any scenario where you need a fixed brightness and timeout.',
@@ -165,10 +166,11 @@
 
       'download.eyebrow': 'Get the app',
       'download.title': 'Download LiangBuLiang',
-      'download.sub': 'Latest version v26.08.145, for Android 7.0 and above.',
+      'download.sub': 'Latest version v26.08.r145, for Android 7.0 and above.',
       'download.meta': 'Android 7.0+ · arm64-v8a · Free · No ads',
-      'download.cta_github': 'Download from GitHub Releases',
-      'download.cta_source': 'View source',
+      'download.cta_direct': 'Download APK Here',
+      'download.cta_github': 'GitHub Download',
+      'download.cta_star': 'GitHub Star',
       'download.note': 'The APK is built and signed by Tinger. The build process and source are fully public and auditable on GitHub.',
 
       'guide.eyebrow': 'Power user',
