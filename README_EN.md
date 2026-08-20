@@ -1,12 +1,22 @@
-![LiangBuLiang](icon.png)
+<p align="center">
+  <img src="icon.png" alt="LiangBuLiang" width="200" />
+</p>
 
-[中文](README.md)
+<h1 align="center">LiangBuLiang</h1>
 
-# LiangBuLiang
+<p align="center">An ultra-simple screen brightness and screen-off timeout adjustment tool that keeps working in the background.</p>
 
-An ultra-simple screen brightness and screen-off timeout adjustment tool that keeps working in the background.
+<p align="center">Lock your screen settings with one tap for reading, watching videos, or any scenario where you need a fixed screen brightness and screen-off timeout.</p>
 
-Lock your screen settings with one tap for reading, watching videos, or any scenario where you need a fixed screen brightness and screen-off timeout.
+<p align="center">
+  <img alt="Android" src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?logo=android&logoColor=white">
+  <img alt="Target SDK" src="https://img.shields.io/badge/Target%20SDK-36-3DDC84">
+  <img alt="ABI" src="https://img.shields.io/badge/ABI-arm64--v8a-3DDC84">
+</p>
+
+<p align="center">
+  <a href="README.md">中文</a>
+</p>
 
 ---
 

@@ -1,12 +1,22 @@
-![亮不亮](icon.png)
+<p align="center">
+  <img src="icon.png" alt="亮不亮" width="200" />
+</p>
 
-[English](README_EN.md)
+<h1 align="center">亮不亮</h1>
 
-# 亮不亮
+<p align="center">极致简洁的屏幕亮度与熄屏时长调节工具，支持后台持续生效。</p>
 
-极致简洁的屏幕亮度与熄屏时长调节工具，支持后台持续生效。
+<p align="center">在阅读、观影或任何需要固定屏幕亮度与熄屏时长的场景下，一键锁定你的屏幕设置。</p>
 
-在阅读、观影或任何需要固定屏幕亮度与熄屏时长的场景下，一键锁定你的屏幕设置。
+<p align="center">
+  <img alt="Android" src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?logo=android&logoColor=white">
+  <img alt="Target SDK" src="https://img.shields.io/badge/Target%20SDK-36-3DDC84">
+  <img alt="ABI" src="https://img.shields.io/badge/ABI-arm64--v8a-3DDC84">
+</p>
+
+<p align="center">
+  <a href="README_EN.md">English</a>
+</p>
 
 ---
 
