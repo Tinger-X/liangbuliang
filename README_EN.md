@@ -22,7 +22,7 @@
 
 ## Features
 
-- **Screen brightness adjustment** — fine-grained control from 1% to 100%, overriding the system auto-brightness once enabled
+- **Screen brightness adjustment** — fine-grained control from 0.1% to 10%, overriding the system brightness once enabled
 - **Screen-off timeout control** — 25 levels from 5s to **Always On**
 - **Background daemon** — keeps your settings applied in the background via a foreground service, so they won't be lost when switching apps
 - **One-tap restore** — automatically restores your original system settings when the feature is turned off
