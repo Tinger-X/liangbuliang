@@ -13,3 +13,4 @@ app/src/test/screenshots/
 # Web
 .wrangler/
 node_modules/
+wrangler.jsonc
