@@ -27,7 +27,7 @@
   <meta name="theme-color" content="#F59E0B" />
   <meta name="color-scheme" content="light dark" />
 
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/assets/styles.css?v=260821001" />
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="a11y.skip">跳到主要内容</a>
@@ -142,6 +142,10 @@
             <li>
               <span class="stat-value" data-i18n="hero.stat_privacy_val">本地存储</span>
               <span class="stat-label" data-i18n="hero.stat_privacy">隐私优先</span>
+            </li>
+            <li>
+              <span class="stat-value" id="stat-downloads">—</span>
+              <span class="stat-label" data-i18n="hero.stat_downloads">累计下载</span>
             </li>
           </ul>
         </div>
@@ -260,7 +264,7 @@
                   </div>
                 </div>
 
-                <p class="app-footer">Copyright © 26-26 Tinger, v26.08.r145</p>
+                <p class="app-footer">Copyright © 26-26 Tinger, <span class="js-version">v26.08.r145</span></p>
               </div>
 
               <div class="screensaver" id="screensaver" aria-hidden="true">
@@ -286,11 +290,11 @@
         <div class="download-card reveal">
           <img class="download-icon" src="/assets/logo.png" alt="亮不亮应用图标" width="96" height="96" loading="lazy" />
           <div class="download-info">
-            <h3>亮不亮 <span class="version-tag">v26.08.r145</span></h3>
+            <h3>亮不亮 <span class="version-tag js-version">v26.08.r145</span></h3>
             <p data-i18n="download.meta">Android 7.0+ · arm64-v8a · 免费 · 无广告</p>
           </div>
           <div class="download-actions">
-            <a class="btn btn-primary btn-lg" href="/assets/LiangBuLiang-v26.08.r145.apk" download>
+            <a class="btn btn-primary btn-lg" href="/download">
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span data-i18n="download.cta_direct">官网下载安装包</span>
             </a>
@@ -488,6 +492,6 @@
     </div>
   </footer>
 
-  <script src="/script.js"></script>
+  <script src="/assets/script.js?v=260821002"></script>
 </body>
 </html>
