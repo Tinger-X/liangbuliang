@@ -333,6 +333,22 @@
     if (v >= 1) return Math.round(v) + '%';
     return (Math.floor(v * 10) / 10) + '%'; // matches the app's formatBrightnessValue (floored)
   }
+  // 滑块位置 0..1（input min=0.1 max=10，线性映射到位置）。
+  function brightnessFraction() {
+    return (parseFloat(brightnessRange.value) - 0.1) / 9.9;
+  }
+  // 数值显示：左半 0.1% ~ 1%，右半 1% ~ 10%。
+  function brightnessDisplay() {
+    var f = brightnessFraction();
+    if (f <= 0.5) return 0.1 + (f / 0.5) * 0.9;
+    return 1 + ((f - 0.5) / 0.5) * 9;
+  }
+  // 实际元素亮度：左半 0.1 ~ 0.5，右半 0.5 ~ 0.8。
+  function brightnessVisual() {
+    var f = brightnessFraction();
+    if (f <= 0.5) return 0.1 + (f / 0.5) * 0.4;
+    return 0.5 + ((f - 0.5) / 0.5) * 0.3;
+  }
   function paintRange(input, fraction) {
     var w = input.clientWidth || 1;
     var thumb = 30;
@@ -343,14 +359,12 @@
   }
   function applyBrightnessVisual() {
     if (!brightnessOn) { phoneApp.style.filter = ''; return; }
-    var v = parseFloat(brightnessRange.value);
-    var b = 0.05 + 0.95 * (v / 10); // 0.1% → very dim, 10% → full
-    phoneApp.style.filter = 'brightness(' + b.toFixed(3) + ')';
+    phoneApp.style.filter = 'brightness(' + brightnessVisual().toFixed(3) + ')';
   }
 
   function onBrightnessInput() {
-    brightnessValue.textContent = fmtBrightness(parseFloat(brightnessRange.value));
-    paintRange(brightnessRange, (parseFloat(brightnessRange.value) - 0.1) / 9.9);
+    brightnessValue.textContent = fmtBrightness(brightnessDisplay());
+    paintRange(brightnessRange, brightnessFraction());
     applyBrightnessVisual();
   }
   function setBrightnessOn(on) {
@@ -359,8 +373,8 @@
     brightnessSlider.classList.toggle('is-open', on);
     if (on) {
       brightnessValue.classList.remove('is-off');
-      brightnessValue.textContent = fmtBrightness(parseFloat(brightnessRange.value));
-      paintRange(brightnessRange, (parseFloat(brightnessRange.value) - 0.1) / 9.9);
+      brightnessValue.textContent = fmtBrightness(brightnessDisplay());
+      paintRange(brightnessRange, brightnessFraction());
       applyBrightnessVisual();
     } else {
       brightnessValue.classList.add('is-off');
@@ -420,13 +434,13 @@
   brightnessRange.addEventListener('input', onBrightnessInput);
   timeoutRange.addEventListener('input', onTimeoutInput);
   window.addEventListener('resize', function () {
-    paintRange(brightnessRange, (parseFloat(brightnessRange.value) - 0.1) / 9.9);
+    paintRange(brightnessRange, brightnessFraction());
     paintRange(timeoutRange, timeoutIndex / 24);
   });
 
   // Re-render the dynamic demo labels when the language changes.
   function syncPhoneLabels() {
-    brightnessValue.textContent = brightnessOn ? fmtBrightness(parseFloat(brightnessRange.value)) : t('demo.off');
+    brightnessValue.textContent = brightnessOn ? fmtBrightness(brightnessDisplay()) : t('demo.off');
     timeoutValue.textContent = timeoutOn ? timeoutLabel(timeoutIndex) : t('demo.off');
   }
 
