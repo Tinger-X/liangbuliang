@@ -25,8 +25,7 @@ web/
 ├── schema.sql            # Shared D1 schema (account-level; run once)
 ├── _headers              # Security headers + /assets/* long cache
 ├── robots.txt / sitemap.xml
-├── wrangler.jsonc        # Deploy config (contains shared D1 ID; gitignored)
-└── wrangler.example.jsonc  # Example config (committed)
+├── wrangler.jsonc        # Deploy config (committed)
 ```
 
 ## Required Resources (account-level, shared by every software site)
@@ -52,8 +51,14 @@ What this project occupies:
 
 ## First-time Setup
 
-1. Copy `wrangler.example.jsonc` to `wrangler.jsonc`.
-2. The shared `database_id` / `bucket_name` are already filled in — normally nothing to change; only set `name` to your Pages project name.
+`wrangler.jsonc` is in the repository with the shared `database_id` / `bucket_name` already
+filled in. Normally there is nothing to change: clone it, `wrangler login`, and go. Only when
+adding a **new software** do you set `name` to your Pages project name.
+
+> It is committed because there is nothing in it worth hiding. The `database_id` is only a
+> resource identifier — on its own it grants access to nothing (that needs account
+> credentials), and the bucket name already ships inside the deployed artifact anyway. Keeping
+> a separate "example" for everyone to copy just means the two copies drift.
 
 ## Local Development
 
@@ -117,7 +122,7 @@ The whole backend (download counting + version + GitHub stats) lives in `functio
 
 ### 1. Copy the directory
 
-Create a new repo and copy `functions/`, `_headers` and `wrangler.example.jsonc` from this directory (`index.html` / `assets/` become the new landing page).
+Create a new repo and copy `functions/`, `_headers` and `wrangler.jsonc` from this directory (`index.html` / `assets/` become the new landing page).
 
 ### 2. Edit `functions/_lib/site.js`
 
@@ -138,7 +143,7 @@ export const SITE = {
 ### 3. Create the Pages project and deploy
 
 ```bash
-# rename wrangler.example.jsonc → wrangler.jsonc and set name to the new project
+# set name in wrangler.jsonc to the new project
 wrangler pages deploy --project-name=newsoftware
 ```
 

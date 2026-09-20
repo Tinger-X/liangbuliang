@@ -25,8 +25,7 @@ web/
 ├── schema.sql            # 共享 D1 建表语句（账号级，只需执行一次）
 ├── _headers              # 安全响应头 + /assets/* 长缓存
 ├── robots.txt / sitemap.xml
-├── wrangler.jsonc        # 部署配置（含共享 D1 ID，已被 .gitignore 忽略）
-└── wrangler.example.jsonc  # 配置示例（提交用）
+├── wrangler.jsonc        # 部署配置（入库）
 ```
 
 ## 依赖资源（账号级共享，所有软件官网共用）
@@ -51,8 +50,13 @@ web/
 
 ## 首次配置
 
-1. 复制 `wrangler.example.jsonc` 为 `wrangler.jsonc`。
-2. 共享资源的 `database_id` / `bucket_name` 已经填好，通常无需改动；只有 `name` 改成你的 Pages 项目名。
+`wrangler.jsonc` 已在仓库里，共享资源的 `database_id` / `bucket_name` 都填好了，
+通常不需要改任何东西，clone 下来 `wrangler login` 就能跑。
+
+> 它之所以入库，是因为里面没有值得藏的东西：`database_id` 只是资源标识，
+> 单独拿到它访问不了任何数据（要账号凭据才行），而 bucket 名本来就写在部署产物里。
+> 与其维护一份「示例」再让每个人复制一份（两份会漂），不如就这一份。
+> 只有接入**新软件**时才需要把 `name` 改成你的 Pages 项目名。
 
 ## 本地开发
 
@@ -115,7 +119,7 @@ wrangler r2 object put softwares/liangbuliang/latest.apk \
 
 ### 1. 复制目录
 
-新建仓库，把本目录的 `functions/`、`_headers`、`wrangler.example.jsonc` 复制过去（`index.html` / `assets/` 换成新软件的落地页）。
+新建仓库，把本目录的 `functions/`、`_headers`、`wrangler.jsonc` 复制过去（`index.html` / `assets/` 换成新软件的落地页）。
 
 ### 2. 改 `functions/_lib/site.js`
 
@@ -136,7 +140,7 @@ export const SITE = {
 ### 3. 建 Pages 项目并部署
 
 ```bash
-# wrangler.example.jsonc → wrangler.jsonc，把 name 改成新项目名
+# 把 wrangler.jsonc 的 name 改成新项目名
 wrangler pages deploy --project-name=newsoftware
 ```
 
