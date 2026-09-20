@@ -17,20 +17,33 @@ web/
 │   ├── logo.png          # App icon
 │   └── favicon.svg
 ├── functions/            # Pages Functions
-│   ├── download.js       # /download: count, then stream the APK from R2
+│   ├── download.js       # /download: count, then stream the artifact from R2
 │   ├── api/stats.js      # /api/stats: returns download stats & version
-│   └── _lib/apk.js       # Shared: APK key & version parsing
+│   └── _lib/
+│       ├── site.js       # ★ Site config (app id / GitHub repo / file type)
+│       └── artifact.js   # Artifact key & version parsing
+├── schema.sql            # Shared D1 schema (account-level; run once)
 ├── _headers              # Security headers + /assets/* long cache
 ├── robots.txt / sitemap.xml
-├── wrangler.jsonc        # Deploy config (contains D1 ID; gitignored)
-└── wrangler.example.jsonc  # Example config (committed; placeholder D1 ID)
+├── wrangler.jsonc        # Deploy config (contains shared D1 ID; gitignored)
+└── wrangler.example.jsonc  # Example config (committed)
 ```
 
-## Required Resources
+## Required Resources (account-level, shared by every software site)
 
-- Cloudflare Pages project `liangbuliang` (domain `liangbuliang.tin.edu.kg`)
-- D1 database `liangbuliang`, table `counters(key, value)`: `direct` / `github` / `github_updated_at`
-- R2 bucket `liangbuliang`, object with fixed key `LiangBuLiang-latest.apk`
+| Resource | Name | Purpose |
+|---|---|---|
+| Pages | `liangbuliang` (domain `liangbuliang.tin.edu.kg`) | This site |
+| D1 | `softwares`, table `counters(app, key, value)` | Download counters for all software, isolated by the `app` column |
+| R2 | `softwares`, key `<app>/latest.<ext>` | Release artifacts for all software, isolated by key prefix |
+
+What this project occupies:
+
+- D1: rows with `app = 'liangbuliang'` — `direct` / `github` / `github_updated_at`
+- R2: `liangbuliang/latest.apk`
+
+> **Do not create a new database or bucket for this project.** The shared resources are
+> reused account-wide, and `schema.sql` only needs to be run once.
 
 ## Prerequisites
 
@@ -40,7 +53,7 @@ web/
 ## First-time Setup
 
 1. Copy `wrangler.example.jsonc` to `wrangler.jsonc`.
-2. Replace `d1_databases[].database_id` with the real D1 database ID.
+2. The shared `database_id` / `bucket_name` are already filled in — normally nothing to change; only set `name` to your Pages project name.
 
 ## Local Development
 
@@ -70,13 +83,13 @@ wrangler pages deploy --project-name=liangbuliang
 The version and filename live only in the R2 object's `Content-Disposition` metadata:
 
 ```bash
-wrangler r2 object put liangbuliang/LiangBuLiang-latest.apk \
+wrangler r2 object put softwares/liangbuliang/latest.apk \
   --file <path-to-new-apk> --remote \
   --content-type application/vnd.android.package-archive \
   --content-disposition 'attachment; filename="LiangBuLiang-v<version>.apk"'
 ```
 
-After overwriting the fixed key `LiangBuLiang-latest.apk`, `/download` serves the new filename automatically, and the frontend version (badge / download subtitle / version tag) updates dynamically via `/api/stats`.
+After overwriting the fixed key `liangbuliang/latest.apk`, `/download` serves the new filename automatically, and the frontend version (badge / download subtitle / version tag) updates dynamically via `/api/stats`.
 
 ### Update js / css (cache busting)
 
@@ -93,6 +106,55 @@ After overwriting the fixed key `LiangBuLiang-latest.apk`, `/download` serves th
 ## Key Implementation Notes
 
 - **Download count**: `total = direct site downloads (D1) + GitHub release downloads (GitHub API)`
-  - Direct: `/download` atomically increments D1 `direct`, then streams the APK from R2.
+  - Direct: `/download` atomically increments this app's `direct` in D1, then streams the artifact from R2.
   - GitHub: `/api/stats` fetches the GitHub API server-side every 15 minutes and caches it in D1.
+- Every software shares one D1 database and one R2 bucket, isolated by the `counters.app` column and the `<app>/` key prefix.
 - `wrangler.jsonc` must keep `nodejs_compat` (R2 streaming requires `node:stream`).
+
+## Adding a New Software
+
+The whole backend (download counting + version + GitHub stats) lives in `functions/`, so onboarding a new software requires **no new Cloudflare database or bucket**.
+
+### 1. Copy the directory
+
+Create a new repo and copy `functions/`, `_headers` and `wrangler.example.jsonc` from this directory (`index.html` / `assets/` become the new landing page).
+
+### 2. Edit `functions/_lib/site.js`
+
+Only these fields:
+
+```js
+export const SITE = {
+  app: 'newsoftware',                    // unique id: D1 app column + R2 key prefix
+  githubRepo: 'Tinger-X/newsoftware',    // used to count release downloads
+  namePrefix: 'NewSoftware-',            // filename prefix, used to parse the version
+  ext: 'apk',                            // artifact extension: apk / exe / zip / dmg …
+  contentType: 'application/vnd.android.package-archive',
+};
+```
+
+> Never change `app` after launch — doing so loses historical counts and orphans the uploaded artifact.
+
+### 3. Create the Pages project and deploy
+
+```bash
+# rename wrangler.example.jsonc → wrangler.jsonc and set name to the new project
+wrangler pages deploy --project-name=newsoftware
+```
+
+Keep the shared `database_id` / `bucket_name` as-is. No D1 schema change is needed — the counter rows are created on first download.
+
+### 4. Upload the first artifact
+
+```bash
+wrangler r2 object put softwares/newsoftware/latest.apk \
+  --file <path> --remote \
+  --content-type application/vnd.android.package-archive \
+  --content-disposition 'attachment; filename="NewSoftware-v1.0.0.apk"'
+```
+
+`/api/stats` then returns `{ direct: 0, github: <n>, total: <n>, version: "v1.0.0" }`.
+
+### Frontend wiring
+
+The page only needs to call `/api/stats` for `total` and `version`, and point the download button at `/download` — see `loadStats()` in `assets/script.js`.
