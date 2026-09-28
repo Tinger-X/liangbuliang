@@ -37,6 +37,14 @@ class UpdateScreenshotTest {
     composeTestRule.onNodeWithTag("check_update_button").assertExists()
   }
 
+  /** 暗色主题下按钮底色取 surfaceContainer，需确认它和背景仍有足够对比、不会"消失"。 */
+  @Test
+  fun check_update_button_screenshot_in_dark_theme() {
+    setMainScreen(darkTheme = true)
+    composeTestRule.onNodeWithTag("check_update_button").assertExists()
+    captureScreenRoboImage(filePath = "src/test/screenshots/update_button_dark.png")
+  }
+
   @Test
   fun update_available_dialog_screenshot() {
     UpdateManager.setState(UpdateState.Available(latestVersion = "v26.09.r01", currentVersion = "v26.08.r145"))
@@ -75,11 +83,11 @@ class UpdateScreenshotTest {
     captureScreenRoboImage(filePath = "src/test/screenshots/update_progress_indeterminate.png")
   }
 
-  private fun setMainScreen() {
+  private fun setMainScreen(darkTheme: Boolean = false) {
     val context = ApplicationProvider.getApplicationContext<android.content.Context>()
     val repository = SettingsRepository(context)
     composeTestRule.setContent {
-      MyApplicationTheme {
+      MyApplicationTheme(darkTheme = darkTheme) {
         MainScreen(
           repository = repository,
           onBrightnessToggle = {},

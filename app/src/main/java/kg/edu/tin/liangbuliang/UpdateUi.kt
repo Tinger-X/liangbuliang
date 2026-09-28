@@ -1,6 +1,9 @@
 package kg.edu.tin.liangbuliang
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,12 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,14 +24,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 /**
- * 右上角的「检查更新」按钮。检查中与下载中都在原位显示进度环，
- * 下载时按比例显示，用户不用打开对话框也能看出进展。
+ * 右上角的「检查更新」按钮。
+ *
+ * 用一个柔和的圆形底把图标托住：裸字形在浅色背景上既看不出是按钮，视觉重量也和
+ * 卡片对不上。底色取 surfaceContainer —— 明暗两套主题下都比背景略深一档，
+ * 不抢标题的注意力，又足以读成可点击。
+ *
+ * 检查中与下载中都在原位显示进度环：下载时按比例显示，不打开对话框也能看出进展。
  */
 @Composable
 fun UpdateCheckButton(
@@ -36,29 +46,33 @@ fun UpdateCheckButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val idleTint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f)
-    IconButton(
-        onClick = onClick,
-        modifier = modifier.testTag("check_update_button")
+    Box(
+        modifier = modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .clickable(role = Role.Button, onClick = onClick)
+            .testTag("check_update_button"),
+        contentAlignment = Alignment.Center
     ) {
         when (state) {
             is UpdateState.Checking -> CircularProgressIndicator(
                 modifier = Modifier.size(20.dp),
                 strokeWidth = 2.dp,
-                color = idleTint
+                color = MaterialTheme.colorScheme.primary
             )
 
             is UpdateState.Downloading -> CircularProgressIndicator(
                 progress = { state.fraction },
-                modifier = Modifier.size(20.dp),
-                strokeWidth = 2.dp,
+                modifier = Modifier.size(22.dp),
+                strokeWidth = 2.5.dp,
                 color = MaterialTheme.colorScheme.primary
             )
 
             else -> Icon(
                 imageVector = Icons.Default.SystemUpdate,
                 contentDescription = "检查更新",
-                tint = idleTint,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(24.dp)
             )
         }
