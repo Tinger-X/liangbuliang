@@ -227,7 +227,10 @@
 
   var STORAGE_LANG = 'lbl.lang';
   var lang = localStorage.getItem(STORAGE_LANG) || 'zh';
-  var appVersion = 'v26.08.r145'; // 默认版本；/api/stats 返回后动态更新
+  // 版本号一律以 /api/stats 为准，这里只是接口返回前的占位符。
+  // 不要填具体版本号：填了就会随每次发版过期，而接口一旦失败，
+  // 页面反而会把一个陈旧的版本号当成当前版本显示出来。
+  var appVersion = 'v--.--.r---';
 
   function applyLang() {
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
