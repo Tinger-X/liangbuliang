@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  只暴露应用私有目录下的 update/ 子目录 —— 更新下载的安装包就放在那里。
+  不暴露整个 filesDir，缩小 FileProvider 的可读范围。
+-->
+<paths>
+    <files-path
+        name="updates"
+        path="update/" />
+</paths>

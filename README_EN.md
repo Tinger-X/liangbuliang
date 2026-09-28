@@ -26,6 +26,7 @@
 - **Screen-off timeout control** — 25 levels from 5s to **Always On**
 - **Background daemon** — keeps your settings applied in the background via a foreground service, so they won't be lost when switching apps
 - **One-tap restore** — automatically restores your original system settings when the feature is turned off
+- **In-app update check** — one tap in the top-right corner checks for a new release, downloads it in-app (progress shown both in the notification shade and in the app) and launches the installer automatically when the download finishes
 
 ## Download
 
@@ -108,11 +109,15 @@ This app involves the following permissions and data:
 |:---|:---|
 | `WRITE_SETTINGS` | Adjusts system screen brightness and screen-off timeout |
 | `WRITE_SECURE_SETTINGS` | Achieves smooth 0.1%~1% ultra-low brightness via "Extra Dim" on Android 12+ |
-| `FOREGROUND_SERVICE` | Keeps user settings applied in the background |
-| `POST_NOTIFICATIONS` | Foreground service notification |
+| `FOREGROUND_SERVICE` | Keeps user settings applied in the background; downloads new release packages |
+| `POST_NOTIFICATIONS` | Foreground service notification; shows download progress for new releases |
 | `WAKE_LOCK` | Keeps the screen on (only when the user actively chooses) |
+| `INTERNET` | Checks for updates (`/api/stats` on the official site) and downloads new release packages |
+| `REQUEST_INSTALL_PACKAGES` | Launches the system installer once the download finishes (the user still confirms in the installer UI) |
 
-All settings data is stored locally on the device only and is not uploaded to any server.
+All settings data is stored locally on the device only and is not uploaded to any server. The app's
+only network activity is the update check: it requests the latest version number from the official
+site and downloads the package. No device information or usage data is ever uploaded.
 
 ---
 

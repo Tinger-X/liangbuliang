@@ -1,13 +1,17 @@
 package kg.edu.tin.liangbuliang
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
@@ -29,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -38,8 +43,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import java.io.File
 import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kg.edu.tin.liangbuliang.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,11 +57,35 @@ class MainActivity : ComponentActivity() {
     private lateinit var repository: SettingsRepository
     private var pendingFeature: String? = null
 
+    /** 用户去「安装未知应用」授权，回到应用后继续尚未开始的更新下载。 */
+    private var pendingUpdateDownload = false
+
+    /** 已经自动拉起过安装器的安装包，避免每次回到前台都弹一次。 */
+    private var autoInstalledFile: File? = null
+
+    /**
+     * Android 13+ 才需要运行时申请通知权限。无论是否授予都继续下载：
+     * 授权只决定进度通知看不看得见，应用内的进度显示不依赖它。
+     */
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            startUpdateDownload()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         repository = SettingsRepository(this)
+
+        // 清掉上次遗留的安装包（更新装完或用户放弃后都会留下）。
+        UpdateManager.cleanStaleDownloads(this)
+        // 检查请求挂在 Activity 的协程上，配置变更会把它取消掉，
+        // 这里清掉可能残留的「检查中」状态，否则图标会一直转圈且点不动。
+        if (UpdateManager.state.value is UpdateState.Checking) {
+            UpdateManager.setState(UpdateState.Idle)
+        }
+        observeUpdateState()
 
         setContent {
             MyApplicationTheme {
@@ -81,7 +115,11 @@ class MainActivity : ComponentActivity() {
                         },
                         onTimeoutChange = { index ->
                             handleTimeoutChange(index)
-                        }
+                        },
+                        onCheckUpdate = { checkForUpdate() },
+                        onStartDownload = { startUpdateWithPermissions() },
+                        onCancelDownload = { cancelUpdateDownload() },
+                        onInstall = { file -> launchInstaller(file) }
                     )
                 }
             }
@@ -94,12 +132,121 @@ class MainActivity : ComponentActivity() {
             "brightness" -> continueBrightnessEnable()
             "timeout" -> continueTimeoutEnable()
         }
+        if (pendingUpdateDownload) {
+            pendingUpdateDownload = false
+            if (UpdateManager.canInstallPackages(this)) {
+                startUpdateWithPermissions()
+            } else {
+                Toast.makeText(this, "未授予[安装未知应用]权限，已取消更新", Toast.LENGTH_LONG).show()
+            }
+        }
         // Re-establish the keep-alive service (and overlay fallback) after the app was
         // cleared from recents and reopened, or when returning from a permission screen.
         if (repository.isAnyEnabled) {
             startService(Intent(this, LightService::class.java).apply {
                 action = LightService.ACTION_START
             })
+        }
+    }
+
+    // --- App update ---
+
+    /**
+     * 下载完成（且通过了包名/版本/签名校验）后立刻拉起系统安装器。
+     *
+     * 只在应用处于前台时这么做：Android 10+ 不允许后台应用直接启动 Activity，
+     * 下载在后台完成时改由通知栏的「点击安装」承担（见 UpdateService）。
+     */
+    private fun observeUpdateState() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                UpdateManager.state.collect { state ->
+                    if (state is UpdateState.Ready && state.file != autoInstalledFile) {
+                        autoInstalledFile = state.file
+                        launchInstaller(state.file)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkForUpdate() {
+        lifecycleScope.launch {
+            UpdateManager.setState(UpdateState.Checking)
+            when (val result = UpdateChecker.check()) {
+                is UpdateChecker.Result.Success -> {
+                    val current = BuildConfig.VERSION_NAME
+                    UpdateManager.setState(
+                        if (AppVersion.isNewer(result.version, current)) {
+                            UpdateState.Available(result.version, current)
+                        } else {
+                            UpdateState.UpToDate(result.version)
+                        }
+                    )
+                }
+
+                is UpdateChecker.Result.Failure ->
+                    UpdateManager.setState(UpdateState.Failed(result.message))
+            }
+        }
+    }
+
+    /**
+     * 开始下载前的两道权限：先要「安装未知应用」（否则下完了也装不上），
+     * 再要通知权限（Android 13+，否则通知栏看不到进度）。
+     */
+    private fun startUpdateWithPermissions() {
+        if (!UpdateManager.canInstallPackages(this)) {
+            pendingUpdateDownload = true
+            Toast.makeText(this, "请允许[安装未知应用]后继续更新", Toast.LENGTH_LONG).show()
+            startActivity(
+                Intent(
+                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                    Uri.parse("package:$packageName")
+                )
+            )
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            return
+        }
+        startUpdateDownload()
+    }
+
+    private fun startUpdateDownload() {
+        val version = (UpdateManager.state.value as? UpdateState.Available)?.latestVersion
+        if (version.isNullOrBlank()) {
+            // 状态已经不在「有新版本」了（例如走了权限流程很久），重新查一次，
+            // 避免用一个空的版本号去下载和命名安装包。
+            checkForUpdate()
+            return
+        }
+        ContextCompat.startForegroundService(
+            this,
+            Intent(this, UpdateService::class.java).putExtra(UpdateService.EXTRA_VERSION, version)
+        )
+    }
+
+    private fun cancelUpdateDownload() {
+        startService(
+            Intent(this, UpdateService::class.java).setAction(UpdateService.ACTION_CANCEL)
+        )
+    }
+
+    private fun launchInstaller(file: File) {
+        if (!file.exists()) {
+            UpdateManager.setState(UpdateState.Idle)
+            Toast.makeText(this, "安装包已失效，请重新下载", Toast.LENGTH_LONG).show()
+            return
+        }
+        try {
+            startActivity(UpdateManager.installIntent(this, file))
+        } catch (e: Exception) {
+            Toast.makeText(this, "无法启动安装器：${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -273,7 +420,11 @@ fun MainScreen(
     onBrightnessToggle: (Boolean) -> Unit,
     onTimeoutToggle: (Boolean) -> Unit,
     onBrightnessChange: (Float) -> Unit,
-    onTimeoutChange: (Int) -> Unit
+    onTimeoutChange: (Int) -> Unit,
+    onCheckUpdate: () -> Unit,
+    onStartDownload: () -> Unit,
+    onCancelDownload: () -> Unit,
+    onInstall: (File) -> Unit
 ) {
     var isBrightnessEnabled by remember { mutableStateOf(repository.isBrightnessEnabled) }
     var isTimeoutEnabled by remember { mutableStateOf(repository.isTimeoutEnabled) }
@@ -283,6 +434,33 @@ fun MainScreen(
         )
     }
     var selectedTimeoutIndex by remember { mutableIntStateOf(repository.timeoutIndex) }
+
+    val context = LocalContext.current
+    val updateState by UpdateManager.state.collectAsState()
+    // 点过「后台下载」后隐藏进度对话框；新一轮下载开始时再自动打开。
+    var progressDialogVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(updateState) {
+        when (val current = updateState) {
+            is UpdateState.Downloading ->
+                if (current.bytesRead == 0L) progressDialogVisible = true
+
+            // 一次性结果用 Toast 提示，随后把状态复位，避免回到前台时重复弹出。
+            is UpdateState.UpToDate -> {
+                Toast
+                    .makeText(context, "已是最新版本 ${current.version}", Toast.LENGTH_SHORT)
+                    .show()
+                UpdateManager.setState(UpdateState.Idle)
+            }
+
+            is UpdateState.Failed -> {
+                Toast.makeText(context, current.message, Toast.LENGTH_LONG).show()
+                UpdateManager.setState(UpdateState.Idle)
+            }
+
+            else -> Unit
+        }
+    }
 
     // Derive the display brightness value reactively from slider position
     val displayBrightnessValue by remember {
@@ -314,6 +492,21 @@ fun MainScreen(
                 .windowInsetsPadding(WindowInsets.safeDrawing)
                 .padding(horizontal = 24.dp)
         ) {
+            // ====== 右上角：检查更新 ======
+            UpdateCheckButton(
+                state = updateState,
+                onClick = {
+                    when (val current = updateState) {
+                        // 检查中不重复发起；下载中再点一次则是重新打开进度对话框。
+                        is UpdateState.Checking -> Unit
+                        is UpdateState.Downloading -> progressDialogVisible = true
+                        is UpdateState.Ready -> onInstall(current.file)
+                        else -> onCheckUpdate()
+                    }
+                },
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -704,6 +897,16 @@ fun MainScreen(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)
                     .testTag("footer_info")
+            )
+
+            UpdateDialogs(
+                state = updateState,
+                progressVisible = progressDialogVisible,
+                onDownload = onStartDownload,
+                onCancelDownload = onCancelDownload,
+                onHideProgress = { progressDialogVisible = false },
+                // 「稍后」即放弃本次提示；下次点检查更新会重新查询。
+                onDismiss = { UpdateManager.setState(UpdateState.Idle) }
             )
         }
     }

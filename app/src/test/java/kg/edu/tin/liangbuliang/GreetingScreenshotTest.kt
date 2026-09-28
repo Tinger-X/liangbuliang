@@ -30,7 +30,11 @@ class GreetingScreenshotTest {
           onBrightnessToggle = {},
           onTimeoutToggle = {},
           onBrightnessChange = {},
-          onTimeoutChange = {}
+          onTimeoutChange = {},
+          onCheckUpdate = {},
+          onStartDownload = {},
+          onCancelDownload = {},
+          onInstall = {}
         )
       }
     }

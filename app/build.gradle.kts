@@ -56,6 +56,10 @@ android {
     versionCode = appVersionCode
     versionName = appVersionName
 
+    // 官网地址：检查更新（/api/stats）与下载新版本（/download）都走这里。
+    // 版本号与安装包同源（R2 对象元数据），发布新版本无需改动代码。
+    buildConfigField("String", "SITE_BASE_URL", "\"https://liangbuliang.tin.edu.kg\"")
+
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
