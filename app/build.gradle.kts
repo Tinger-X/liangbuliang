@@ -168,3 +168,16 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   "ksp"(libs.moshi.kotlin.codegen)
 }
+
+dependencies {
+  // play-services-basement（由 firebase-ai 传递引入）会把 androidx.fragment 拉到 1.1.0。
+  // 本应用并不使用 Fragment（ComponentActivity 不是 FragmentActivity），但那个版本低于
+  // 1.3.0，会让 lint 的 InvalidFragmentVersionForActivityResult 判定
+  // registerForActivityResult 不安全，release 构建直接失败。
+  // 这里只把传递版本抬到当前版本，不新增直接依赖。
+  constraints {
+    implementation(libs.androidx.fragment) {
+      because("play-services-basement 传递引入 fragment 1.1.0，低于 lint 要求的 1.3.0")
+    }
+  }
+}
